@@ -1,0 +1,34 @@
+{
+  "UK Compliance Summary": [
+    {
+      "Compliance Metric": "Total Employees",
+      "Value": 16,
+      "Details": "All employees in the system"
+    },
+    {
+      "Compliance Metric": "Employees with Compliance Issues",
+      "Value": 9,
+      "Details": "9/16 employees have compliance issues"
+    },
+    {
+      "Compliance Metric": "Employees with Compliance Warnings",
+      "Value": 3,
+      "Details": "3/16 employees have compliance warnings"
+    },
+    {
+      "Compliance Metric": "Employees Requiring Basic Salary Protection",
+      "Value": 7,
+      "Details": "7 employees had AHP increased to basic salary protection"
+    },
+    {
+      "Compliance Metric": "Employees with Short Reference Period",
+      "Value": 2,
+      "Details": "2 employees have less than 12 weeks in reference period"
+    },
+    {
+      "Compliance Metric": "Average AHP vs 12.07% Holiday Pay",
+      "Value": -2508.06916,
+      "Details": "Average AHP: £520.93221, Average 12.07%: £3029.00138, Difference: -82.8%"
+    }
+  ]
+}
