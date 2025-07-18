@@ -79,15 +79,11 @@ export const getWeeklyBreakdown = (employeeId: number, weekStart: string) => {
     const overtimeHours = dailyHoursRecord ? dailyHoursRecord.OvertimeHours : 0;
 
     // Determine daily eligibility based on hours worked
-    // Consider a day eligible if it's a working day and hours worked >= minimum threshold
     const dailyMinHours = dailyHoursRecord ? dailyHoursRecord.DailyMinimum : 6; // Default to 6 hours
-    const isDailyEligible = isWorkingDay && actualHours >= dailyMinHours;
+    const isDailyEligible = actualHours >= dailyMinHours;
 
-    // Determine attendance status
-    let attendanceStatus = "Weekend";
-    if (isWorkingDay) {
-      attendanceStatus = actualHours > 0 ? "Present" : "Not Present";
-    }
+    // Attendance status: Present if hours > 0, else Not Present (for all days)
+    const attendanceStatus = actualHours > 0 ? "Present" : "Not Present";
 
     dailyData.push({
       date: dateString,
@@ -98,13 +94,12 @@ export const getWeeklyBreakdown = (employeeId: number, weekStart: string) => {
       regularHours,
       overtimeHours,
       performance: isWorkingDay ? (isDailyEligible ? 85 : 60) : 0,
-      attendance: isWorkingDay && actualHours > 0,
+      attendance: actualHours > 0,
       attendanceStatus: attendanceStatus,
-      notes: isWeekend
-        ? "Weekend"
-        : actualHours > 0
-        ? `Worked ${actualHours}h (${isDailyEligible ? 'Eligible' : 'Not Eligible'})`
-        : "No hours worked",
+      notes:
+        actualHours > 0
+          ? `Worked ${actualHours}h (${isDailyEligible ? 'Eligible' : 'Not Eligible'})`
+          : "No hours worked",
     });
   }
 
