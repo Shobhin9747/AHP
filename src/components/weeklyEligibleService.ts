@@ -75,6 +75,8 @@ export const getWeeklyBreakdown = (employeeId: number, weekStart: string) => {
     // Get actual hours from dailyhours.json
     const dailyHoursRecord = getDailyHoursForDate(employeeId, dateString);
     const actualHours = dailyHoursRecord ? dailyHoursRecord.HoursWorked : 0;
+    const regularHours = dailyHoursRecord ? dailyHoursRecord.RegularHours : 0;
+    const overtimeHours = dailyHoursRecord ? dailyHoursRecord.OvertimeHours : 0;
 
     // Determine daily eligibility based on hours worked
     // Consider a day eligible if it's a working day and hours worked >= minimum threshold
@@ -93,6 +95,8 @@ export const getWeeklyBreakdown = (employeeId: number, weekStart: string) => {
       isWorkingDay,
       isEligible: isDailyEligible,
       hours: actualHours,
+      regularHours,
+      overtimeHours,
       performance: isWorkingDay ? (isDailyEligible ? 85 : 60) : 0,
       attendance: isWorkingDay && actualHours > 0,
       attendanceStatus: attendanceStatus,
