@@ -1,51 +1,56 @@
 <template>
   <MainLayout>
     <div
-      class="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 p-8 pt-20"
+      class="min-h-screen w-full bg-gradient-to-br from-blue-500 via-indigo-200 to-purple-400 p-6 pt-20"
     >
-      <!-- Header -->
-      <div class="text-center mb-12 text-white">
-        <h1 class="text-4xl font-bold mb-2">UK Compliance Summary</h1>
-        <p class="text-lg opacity-90">Employee compliance overview</p>
-      </div>
+      <div class="container mx-auto px-2 py-3">
+        <!-- Header -->
+        <div class="text-center mb-12 text-white">
+          <h1 class="text-4xl font-bold mb-2">UK Compliance Summary</h1>
+          <p class="text-lg opacity-90">Employee compliance overview</p>
+        </div>
 
-      <!-- Cards Grid -->
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
-      >
+        <!-- Cards Grid -->
         <div
-          v-for="(metric, index) in complianceMetrics"
-          :key="index"
-          class="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"
         >
-          <!-- Icon -->
-          <div class="text-center mb-4">
-            <i
-              :class="[getIcon(metric), 'text-3xl', getValueColor(metric)]"
-            ></i>
-          </div>
-
-          <!-- Content -->
-          <div class="text-center">
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">
-              {{ metric["Compliance Metric"] }}
-            </h3>
-            <div class="text-3xl font-bold mb-2" :class="getValueColor(metric)">
-              {{ formatValue(metric.Value) }}
-            </div>
-            <p class="text-gray-600 text-sm mb-4">{{ metric.Details }}</p>
-          </div>
-
-          <!-- Status -->
           <div
-            class="flex items-center justify-center gap-2 text-xs font-semibold uppercase"
-            :class="getStatusColor(metric)"
+            v-for="(metric, index) in complianceMetrics"
+            :key="index"
+            class="bg-white rounded-xl p-6 shadow-lg hover:shadow-md transition-all duration-300 hover:-translate-y-1"
           >
-            <span
-              class="w-2 h-2 rounded-full"
-              :class="getStatusDotColor(metric)"
-            ></span>
-            {{ getStatusText(metric) }}
+            <!-- Icon -->
+            <div class="text-center mb-4">
+              <i
+                :class="[getIcon(metric), 'text-3xl', getValueColor(metric)]"
+              ></i>
+            </div>
+
+            <!-- Content -->
+            <div class="text-center">
+              <h3 class="text-lg font-semibold text-gray-800 mb-3">
+                {{ metric["Compliance Metric"] }}
+              </h3>
+              <div
+                class="text-3xl font-bold mb-2"
+                :class="getValueColor(metric)"
+              >
+                {{ formatValue(metric.Value) }}
+              </div>
+              <p class="text-gray-600 text-sm mb-4">{{ metric.Details }}</p>
+            </div>
+
+            <!-- Status -->
+            <div
+              class="flex items-center justify-center gap-2 text-xs font-semibold uppercase"
+              :class="getStatusColor(metric)"
+            >
+              <span
+                class="w-2 h-2 rounded-full"
+                :class="getStatusDotColor(metric)"
+              ></span>
+              {{ getStatusText(metric) }}
+            </div>
           </div>
         </div>
       </div>

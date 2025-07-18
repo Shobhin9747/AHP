@@ -1,11 +1,9 @@
 <!-- layouts/MainLayout.vue -->
 <template>
-  <div class="h-screen overflow-y-auto">
-    <Navbar />
-    <main>
-      <slot />
-    </main>
-  </div>
+  <Navbar />
+  <main>
+    <slot />
+  </main>
 </template>
 
 <script setup>

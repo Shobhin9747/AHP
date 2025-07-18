@@ -14,6 +14,7 @@ export interface WeeklyEligibilityData {
 
 // Import the JSON data
 import weeklyEligibleJson from "./weeklyeligible.json";
+import { getDailyHoursForDate } from "./dailyhoursService";
 
 export const weeklyEligibleData: WeeklyEligibilityData =
   weeklyEligibleJson as WeeklyEligibilityData;
@@ -66,37 +67,66 @@ export const getWeeklyBreakdown = (employeeId: number, weekStart: string) => {
   for (let i = 0; i < 7; i++) {
     const currentDate = new Date(startDate);
     currentDate.setDate(startDate.getDate() + i);
+    const dateString = currentDate.toISOString().split("T")[0];
 
     const isWeekend = currentDate.getDay() === 0 || currentDate.getDay() === 6;
     const isWorkingDay = !isWeekend;
 
+    // Get actual hours from dailyhours.json
+    const dailyHoursRecord = getDailyHoursForDate(employeeId, dateString);
+    const actualHours = dailyHoursRecord ? dailyHoursRecord.HoursWorked : 0;
+
+    // Determine daily eligibility based on hours worked
+    // Consider a day eligible if it's a working day and hours worked >= minimum threshold
+    const dailyMinHours = dailyHoursRecord ? dailyHoursRecord.DailyMinimum : 6; // Default to 6 hours
+    const isDailyEligible = isWorkingDay && actualHours >= dailyMinHours;
+
+    // Determine attendance status
+    let attendanceStatus = "Weekend";
+    if (isWorkingDay) {
+      attendanceStatus = actualHours > 0 ? "Present" : "Not Present";
+    }
+
     dailyData.push({
-      date: currentDate.toISOString().split("T")[0],
+      date: dateString,
       dayName: currentDate.toLocaleDateString("en-US", { weekday: "short" }),
       isWorkingDay,
-      isEligible: weekData.IsEligibleWeek && isWorkingDay,
-      hours: isWorkingDay ? (weekData.IsEligibleWeek ? 8 : 0) : 0,
-      performance: isWorkingDay ? (weekData.IsEligibleWeek ? 85 : 60) : 0,
-      attendance: isWorkingDay,
+      isEligible: isDailyEligible,
+      hours: actualHours,
+      performance: isWorkingDay ? (isDailyEligible ? 85 : 60) : 0,
+      attendance: isWorkingDay && actualHours > 0,
+      attendanceStatus: attendanceStatus,
       notes: isWeekend
         ? "Weekend"
-        : weekData.IsEligibleWeek
-        ? "Eligible day"
-        : weekData.EligibilityReason,
+        : actualHours > 0
+        ? `Worked ${actualHours}h (${isDailyEligible ? 'Eligible' : 'Not Eligible'})`
+        : "No hours worked",
     });
   }
+
+  // Calculate weekly eligibility based on daily results
+  const workingDays = dailyData.filter(day => day.isWorkingDay);
+  const eligibleDays = dailyData.filter(day => day.isEligible);
+  const totalWorkingDays = workingDays.length;
+  const totalEligibleDays = eligibleDays.length;
+  
+  // Determine weekly eligibility based on daily results
+  const isWeeklyEligible = totalEligibleDays > 0; // At least one eligible day
+  const eligibilityReason = totalWorkingDays > 0 
+    ? `${totalEligibleDays}/${totalWorkingDays} days meet minimum requirements (${isWeeklyEligible ? 'eligible' : 'not eligible'})`
+    : "No working days this week";
 
   return {
     employeeId: weekData.EmployeeID,
     employeeName: weekData.EmployeeName,
     weekStart: weekData.WeekStart,
     weekEnd: weekData.WeekEnd,
-    isEligibleWeek: weekData.IsEligibleWeek,
-    eligibilityReason: weekData.EligibilityReason,
+    isEligibleWeek: isWeeklyEligible,
+    eligibilityReason: eligibilityReason,
     dailyData,
     weeklyStats: {
       totalHours: dailyData.reduce((sum, day) => sum + day.hours, 0),
-      eligibleDays: dailyData.filter((day) => day.isEligible).length,
+      eligibleDays: totalEligibleDays,
       averagePerformance:
         dailyData
           .filter((day) => day.isWorkingDay)
