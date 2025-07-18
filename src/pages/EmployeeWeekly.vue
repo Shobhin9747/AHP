@@ -169,9 +169,7 @@
                   <h3 class="text-2xl font-bold text-gray-900 mb-2">
                     {{ week.employeeName }}
                   </h3>
-                  <p class="text-gray-600 text-lg">
-                    Employee ID: {{ week.employeeId }}
-                  </p>
+                
                   <p class="text-sm text-gray-500 mt-2 bg-white px-3 py-1 rounded-full inline-block">
                     Week: {{ formatDateRange(week.weekStart, week.weekEnd) }}
                   </p>
@@ -242,6 +240,14 @@
                     <div class="flex justify-between items-center">
                       <span class="text-xs text-gray-600 font-medium">Hours:</span>
                       <span class="font-bold text-gray-900">{{ day.hours }}h</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-xs text-gray-600 font-medium">Regular:</span>
+                      <span class="font-bold text-gray-900">{{ day.regularHours }}h</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-xs text-gray-600 font-medium">Overtime:</span>
+                      <span class="font-bold text-gray-900">{{ day.overtimeHours }}h</span>
                     </div>
                     <div class="flex justify-between items-center">
                       <span class="text-xs text-gray-600 font-medium">Status:</span>
